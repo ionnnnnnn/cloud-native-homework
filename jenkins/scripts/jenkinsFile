@@ -1,0 +1,90 @@
+pipeline {
+    agent none
+    stages {
+        stage('Clone to master') {
+            agent {
+                label 'master'
+
+            }
+            steps {
+                echo "1. Git Clone Stage"
+                git url: "https://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@github.com/ionnnnnnn/cloud-native-homework.git"
+
+            }
+
+        }
+        stage('Maven Build') {
+            agent {
+                docker {
+                    image 'maven:latest'
+                    args '-v /root/.m2:/root/.m2'
+
+                }
+
+            }
+            steps {
+                echo "2. Maven Build Stage"
+                sh 'mvn -B clean package -Dmaven.test.skip=true'
+
+            }
+
+        }
+        stage('Image Build') {
+            agent {
+                label 'master'
+
+            }
+            steps {
+                echo "3. Image Build Stage"
+                sh 'docker build -f Dockerfile --build-arg jar_name=target/cloud-native-homework-1.0-SNAPSHOT.jar -t cloud-native-homework:${BUILD_ID} . '
+                sh 'docker tag cloud-native-homework:${BUILD_ID} harbor.edu.cn/nju12/cloud-native-homework:${BUILD_ID}'
+
+            }
+
+        }
+        stage('Push') {
+            agent {
+                label 'master'
+
+            }
+            steps {
+                echo "4. Push Docker Image Stage"
+                sh "docker login --username=nju12 harbor.edu.cn -p nju122022"
+                sh "docker push harbor.edu.cn/nju12/cloud-native-homework:${BUILD_ID}"
+
+            }
+
+        }
+
+    }
+
+}
+
+node('slave') {
+    container('jnlp-kubectl') {
+        stage('connect'){
+            sh 'curl "http://p.nju.edu.cn/portal_io/login" --data "username=201250081&password=rrx142857"'
+        }
+        stage('Git Clone') {
+            git url: "https://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@github.com/ionnnnnnn/cloud-native-homework.git"
+
+        }
+        stage('YAML') {
+            echo "5. Change YAML File Stage"
+            sh 'sed -i "s#{VERSION}#${BUILD_ID}#g" ./jenkins/scripts/cloud-native-homework.yaml'
+
+        }
+        stage('Deploy') {
+            echo "6. Deploy To K8s Stage"
+            sh 'kubectl apply -f ./jenkins/scripts/cloud-native-homework.yaml -n nju12'
+            sh 'kubectl apply -f ./jenkins/scripts/cloud-native-homework-serviceMonitor.yaml'
+
+        }
+        stage('RTF Test'){
+            echo "RTF Test Stage"
+            sh 'kubectl apply -f ./jenkins/scripts/rtf.yaml -n nju12'
+
+        }
+    }
+
+}
