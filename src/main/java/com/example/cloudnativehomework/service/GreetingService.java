@@ -1,6 +1,6 @@
 package com.example.cloudnativehomework.service;
 
-import com.example.cloudnativehomework.domain.Greeting;
+import com.example.cloudnativehomework.domain.*;
 import org.springframework.stereotype.Service;
 
 @Service

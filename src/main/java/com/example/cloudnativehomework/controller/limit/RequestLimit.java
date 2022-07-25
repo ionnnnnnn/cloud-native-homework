@@ -1,7 +1,5 @@
 package com.example.cloudnativehomework.controller.limit;
 
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 
 import java.lang.annotation.*;
 

@@ -1,6 +1,6 @@
 package com.example.cloudnativehomework.controller;
 
-import com.example.cloudnativehomework.controller.limit.RequestLimit;
+import com.example.cloudnativehomework.controller.limit.*;
 import com.example.cloudnativehomework.service.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
