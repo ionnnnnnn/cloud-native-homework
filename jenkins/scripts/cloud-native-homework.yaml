@@ -39,7 +39,7 @@ spec:
     app: cloud-native-homework
   ports:
     - name: tcp
-      nodePort: 31110
+      nodePort: 31120
       protocol: TCP
       port: 9999
       targetPort: 9999
