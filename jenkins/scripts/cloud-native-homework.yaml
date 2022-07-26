@@ -23,13 +23,11 @@ spec:
       containers:
         - image: harbor.edu.cn/nju12/cloud-native-homework:{VERSION}
           name: cloud-native-homework
-      imagePullSecrets:
-        - name: nju12
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: cloud-native-homework
+  name: cloud-native-homework-svc
   namespace: nju12
   labels:
     app: cloud-native-homework
