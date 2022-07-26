@@ -62,9 +62,6 @@ pipeline {
 
 node('slave') {
     container('jnlp-kubectl') {
-        stage('connect'){
-            sh 'curl "http://p.nju.edu.cn/portal_io/login" --data "username=201250081&password=rrx142857"'
-        }
         stage('Git Clone') {
             git branch:'master',url: "https://github.com/ionnnnnnn/cloud-native-homework.git"
 
