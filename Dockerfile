@@ -1,10 +1,4 @@
-FROM java:8
-MAINTAINER nju12
-ADD target/cloud-native-homework-1.0-SNAPSHOT.jar .
+FROM openjdk:8
 EXPOSE 9999
-ENTRYPOINT ["sh", "-c", "set -e && java -XX:+PrintFlagsFinal \
-                                           -XX:+HeapDumpOnOutOfMemoryError \
-                                           -XX:HeapDumpPath=/heapdump/heapdump.hprof \
-                                           -XX:+UnlockExperimentalVMOptions \
-                                           -XX:+UseCGroupMemoryLimitForHeap \
-                                           $JAVA_OPTS -jar cloud-native-homework-1.0-SNAPSHOT.jar"]
+ADD target/cloud-native-homework-1.0-SNAPSHOT.jar /app.jar
+CMD java -jar /app.jar
